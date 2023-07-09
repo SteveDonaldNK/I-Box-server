@@ -52,6 +52,8 @@ passport.deserializeUser(function(id, done) {
 });
 
   
+// ...
+
 // Routes
 
 auth(app, User);  // authentication
@@ -60,33 +62,39 @@ app.get('/', (req, res) => {
   res.send("hello world");
 })
 
-app.get('/api/set-code', (req, res) => {
-  
-});
-
 app.post('/api/verify-code', async (req, res) => {
   const code = req.body.code;
 
-  await Code.findOne({code}).then((code) => {
-    if (code) { res.send('ok') } else { res.send('code incorrecte') }
-  }).catch(err => console.log(err));
-})
+  try {
+    const foundCode = await Code.findOne({ code });
+
+    if (foundCode) {
+      res.send('ok');
+    } else {
+      res.send('code incorrecte');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 app.post('/api/verify-agent', async (req, res) => {
   const matricule = req.body.matricule;
 
-  await Agent.findOne({matricule}).then((agent) => {
-    if (agent) { res.send('ok') } else { res.send('matricule incorrecte') }
-  }).catch(err => console.log(err));
-})
+  try {
+    const foundAgent = await Agent.findOne({ matricule });
 
-// app.post('/api/notify-user', async (req, res) => {
-//   const phone = req.body.phone;
-
-//   await User.findOne({phone}).then((user) => {
-    
-//   }).catch(err => console.log(err));
-// })
+    if (foundAgent) {
+      res.send('ok');
+    } else {
+      res.send('matricule incorrecte');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 // Start the server
 
