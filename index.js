@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const auth = require('./auth');
-const OTP = require('./OTP');
+// const OTP = require('./OTP');
 const init = require('./init');
 const User = require('./Schema/user');
 const Code = require('./Schema/code');
@@ -13,7 +13,7 @@ const session = require('express-session');
 const passport = require('passport');
 
 const app = express();
-const port = 3000;
+const port = 3000  || process.env.PORT;
 
 // Initialization
 init(mongoose);

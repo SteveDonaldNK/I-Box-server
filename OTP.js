@@ -12,6 +12,5 @@ function generateOTP(length) {
   
   // Generate a 6-digit OTP
   const otp = generateOTP(6);
-  console.log('Generated OTP:', otp);
   
 module.exports = generateOTP;
