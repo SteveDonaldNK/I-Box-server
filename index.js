@@ -13,7 +13,7 @@ const session = require('express-session');
 const passport = require('passport');
 
 const app = express();
-const port = 3000  || process.env.PORT;
+const port = process.env.PORT || 3000;
 
 // Initialization
 init(mongoose);
