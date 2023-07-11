@@ -7,8 +7,13 @@ const userSchema = new mongoose.Schema({
     password: String,
     email: String,
     phone: String,
-    notifications: String,
-    history: String,
+    notifications: [String],
+    history: [String],
+    code: Number,
+    subscriber: {
+      type: Boolean,
+      default: false,
+    }
   });
   
 module.exports = mongoose.model('User', userSchema);

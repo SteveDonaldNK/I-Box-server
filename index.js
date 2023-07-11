@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const auth = require('./auth');
-// const OTP = require('./OTP');
+const OTP = require('./OTP');
 const init = require('./init');
 const User = require('./Schema/user');
 const Code = require('./Schema/code');
@@ -60,6 +60,19 @@ auth(app, User);  // authentication
 
 app.get('/', (req, res) => {
   res.send("hello world");
+})
+
+app.get('/api/get-code', (req, res) => {
+  console.log("first")
+  const code = {
+    value: OTP(6)
+  }
+  res.send(code)
+})
+
+app.post('/api/profile', async (req, res) => {
+  const foundUser = await User.findById(req.body.user)
+  res.send(foundUser)
 })
 
 app.post('/api/verify-code', async (req, res) => {
