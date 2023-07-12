@@ -104,12 +104,12 @@ app.post('/api/create-checkout-session', (req, res) => {
     reference: 'your_unique_reference', // this param is optional but recommended
   };
   
-  const headers = {
-    'Authorization': `${process.env.PUBLIC_KEY}`,
-    'Cache-Control': 'no-cache',
-  };
-  
-  axios.post(url, fields, { headers }).then((response) => {
+  axios.post(url, fields, {
+    headers: {
+      'Authorization': process.env.PUBLIC_KEY,
+      'Cache-Control': 'no-cache',
+    }
+}).then((response) => {
       res.send(response.data)
     })
     .catch((error) => {
