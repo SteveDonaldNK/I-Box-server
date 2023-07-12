@@ -11,6 +11,7 @@ const localStategy = require('./strategy');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const passport = require('passport');
+const axios = require('axios');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -91,6 +92,33 @@ app.post('/api/verify-code', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.post('/api/create-checkout-session', async(req, res) => {
+
+  const url = 'https://api.notchpay.co/payments/initialize';
+  const fields = {
+    email: 'customer@email.com',
+    amount: '1000',
+    currency: 'XAF',
+    description: 'Payment description', // this field is optional
+    reference: 'your_unique_reference', // this param is optional but recommended
+  };
+  
+  const headers = {
+    Authorization: process.env.PUBLIC_KEY,
+    'Cache-Control': 'no-cache',
+  };
+  
+  axios
+    .post(url, fields, { headers })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+    res.send('ok')
+})
 
 app.post('/api/verify-agent', async (req, res) => {
   const matricule = req.body.matricule;
