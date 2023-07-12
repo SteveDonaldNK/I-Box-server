@@ -64,15 +64,16 @@ app.get('/', (req, res) => {
 })
 
 app.post('/api/get-code', (req, res) => {
-  const user = req.body.id;
+  const phone = req.body.phone;
   const code = {
     value: OTP(6)
   }
   console.log(code)
-  User.findById({user}).then((foundUser) => {
-    const upRes = User.updateOne({_id: id}, {notifications: `votre code est le suivant: ${code}`})
-    console.log(upRes)
-    res.send(code)
+  User.findOne({phone}).then((foundUser) => {
+    if (foundUser) {
+      const upRes = User.findOneAndUpdate({phone}, {notifications: `votre code est le suivant: ${code}`})
+      res.send(code)
+    }
   })
 })
 
