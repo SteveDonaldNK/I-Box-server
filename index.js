@@ -84,7 +84,7 @@ app.post('/api/verify-code', async (req, res) => {
     if (foundCode) {
       res.send('ok');
     } else {
-      res.send('code incorrecte');
+      res.status(401).send('code incorrecte');
     }
   } catch (error) {
     console.error(error);
@@ -101,7 +101,25 @@ app.post('/api/verify-agent', async (req, res) => {
     if (foundAgent) {
       res.send('ok');
     } else {
-      res.send('matricule incorrecte');
+      res.status(401).send('matricule incorrecte');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/api/notify-client', async (req, res) => {
+  const phone = req.body.phone;
+
+  try {
+    const foundUser = await User.findOne({ phone });
+
+    if (foundUser) {
+      console.log("je vous suit a distance les amis")
+      res.send('ok');
+    } else {
+      res.status(400).send('Aucun utilisaterur ne pocede ce numero');
     }
   } catch (error) {
     console.error(error);
