@@ -83,9 +83,9 @@ app.post('/api/get-code', (req, res) => {
   })
 
   newCode.save();
-  User.findOne({phone}).then((foundUser) => {
+  User.findOne({phone}).then(async (foundUser) => {
     if (foundUser) {
-      const upRes = User.findOneAndUpdate({phone}, {notifications: `votre code est le suivant: ${code}`})
+      const upRes = await User.findOneAndUpdate({phone}, {notifications: `votre code est le suivant: ${code}`})
     }
   })
   res.send(code)
