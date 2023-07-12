@@ -93,7 +93,7 @@ app.post('/api/verify-code', async (req, res) => {
   }
 });
 
-app.post('/api/create-checkout-session', async(req, res) => {
+app.post('/api/create-checkout-session', (req, res) => {
 
   const url = 'https://api.notchpay.co/payments/initialize';
   const fields = {
@@ -109,13 +109,11 @@ app.post('/api/create-checkout-session', async(req, res) => {
     'Cache-Control': 'no-cache',
   };
   
-  axios
-    .post(url, fields, { headers })
-    .then((response) => {
+  axios.post(url, fields, { headers }).then((response) => {
       res.send(response.data)
     })
     .catch((error) => {
-      console.log(error);
+      console.log("there is a catch error");
       res.status(500).send('internal server error')
     });
 })
