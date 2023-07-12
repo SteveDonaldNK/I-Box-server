@@ -11,7 +11,7 @@ const localStategy = require('./strategy');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const passport = require('passport');
-const axios = require('axios');
+const Axios = require('axios');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -63,12 +63,17 @@ app.get('/', (req, res) => {
   res.send("hello world");
 })
 
-app.get('/api/get-code', (req, res) => {
-  console.log("first")
+app.post('/api/get-code', (req, res) => {
+  const user = req.body.id;
   const code = {
     value: OTP(6)
   }
-  res.send(code)
+  console.log(code)
+  User.findById({user}).then((foundUser) => {
+    const upRes = User.updateOne({_id: id}, {notifications: `votre code est le suivant: ${code}`})
+    console.log(upRes)
+    res.send(code)
+  })
 })
 
 app.post('/api/profile', async (req, res) => {
@@ -83,6 +88,8 @@ app.post('/api/verify-code', async (req, res) => {
     const foundCode = await Code.findOne({ code });
 
     if (foundCode) {
+      const delRes = await Code.deleteOne({code});
+      console.log(delRes)
       res.send('ok');
     } else {
       res.status(401).send('code incorrecte');
@@ -93,29 +100,26 @@ app.post('/api/verify-code', async (req, res) => {
   }
 });
 
-app.post('/api/create-checkout-session', (req, res) => {
+app.post('/api/create-checkout-session', async (req, res) => {
 
   const url = 'https://api.notchpay.co/payments/initialize';
   const fields = {
-    email: 'customer@email.com',
+    email: 'sakpakd@gmail.com',
     amount: '1000',
     currency: 'XAF',
     description: 'Payment description', // this field is optional
     reference: 'your_unique_reference', // this param is optional but recommended
   };
   
-  axios.post(url, fields, {
-    headers: {
-      'Authorization': process.env.PUBLIC_KEY,
-      'Cache-Control': 'no-cache',
+  const result =  await Axios.post(url, fields, {
+    Headers: {
+      "Authorization": "sb.3CThbWdTYo2pcJkSQmcysgAVlYuWrYjZD6sebIFF3j8gAl6clK0RvCl0iQUtowGqXeL8lr5Pf9rpstLJZ3xyp8SdK9SdkPADUUYTKsp0xaZBrbkDvZ6lFs4Hv5Su6",
+      "Cache-Control": "no-cache"
     }
-}).then((response) => {
-      res.send(response.data)
-    })
-    .catch((error) => {
-      console.log("there is a catch error");
-      res.status(500).send('internal server error')
-    });
+  })
+
+  // console.log(result)
+  res.send(result)
 })
 
 app.post('/api/verify-agent', async (req, res) => {
@@ -142,7 +146,8 @@ app.post('/api/notify-client', async (req, res) => {
     const foundUser = await User.findOne({ phone });
 
     if (foundUser) {
-      console.log("je vous suit a distance les amis")
+      const upRes = await User.updateOne({ phone }, {notifications: 'nouveau colis'});
+      console.log(upRes)
       res.send('ok');
     } else {
       res.status(400).send('Aucun utilisaterur ne pocede ce numero');
