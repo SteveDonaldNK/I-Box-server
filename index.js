@@ -105,7 +105,7 @@ app.post('/api/create-checkout-session', (req, res) => {
   };
   
   const headers = {
-    Authorization: process.env.PUBLIC_KEY,
+    'Authorization': `${process.env.PUBLIC_KEY}`,
     'Cache-Control': 'no-cache',
   };
   
