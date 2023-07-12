@@ -112,12 +112,12 @@ app.post('/api/create-checkout-session', async(req, res) => {
   axios
     .post(url, fields, { headers })
     .then((response) => {
-      console.log(response.data);
+      res.send(response.data)
     })
     .catch((error) => {
       console.log(error);
+      res.status(500).send('internal server error')
     });
-    res.send('ok')
 })
 
 app.post('/api/verify-agent', async (req, res) => {
