@@ -63,6 +63,15 @@ app.get('/', (req, res) => {
   res.send("hello world");
 })
 
+app.post('/api/get-not', (req, res) => {
+  const phone = req.body.phone;
+  User.findOne({phone}).then((foundUser) => {
+    if(foundUser) {
+      res.send(foundUser.notifications)
+    }
+  })
+})
+
 app.post('/api/get-code', (req, res) => {
   const phone = req.body.phone;
   const code = {
