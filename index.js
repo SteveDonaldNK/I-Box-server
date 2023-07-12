@@ -69,12 +69,17 @@ app.post('/api/get-code', (req, res) => {
     value: OTP(6)
   }
   console.log(code)
+  const newCode = new Code({
+    code: code.value
+  })
+
+  newCode.save();
   User.findOne({phone}).then((foundUser) => {
     if (foundUser) {
       const upRes = User.findOneAndUpdate({phone}, {notifications: `votre code est le suivant: ${code}`})
-      res.send(code)
     }
   })
+  res.send(code)
 })
 
 app.post('/api/profile', async (req, res) => {
